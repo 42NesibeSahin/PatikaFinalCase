@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\EntityLayer",
+    "\\EntityLayer\\Entities"
   ],
+  "SelectedNode": "\\EntityLayer\\Entities\\User.cs",
   "PreviewInSolutionExplorer": false
 }

@@ -1,0 +1,15 @@
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\WebAPI.Application\bin\Debug\net7.0\WebAPI.Application.deps.json
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\WebAPI.Application\bin\Debug\net7.0\WebAPI.Application.dll
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\WebAPI.Application\bin\Debug\net7.0\WebAPI.Application.pdb
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\WebAPI.Application\bin\Debug\net7.0\WebAPI.Domain.dll
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\WebAPI.Application\bin\Debug\net7.0\WebAPI.Domain.pdb
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\WebAPI.Application\obj\Debug\net7.0\WebAPI.Application.csproj.AssemblyReference.cache
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\WebAPI.Application\obj\Debug\net7.0\WebAPI.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\WebAPI.Application\obj\Debug\net7.0\WebAPI.Application.AssemblyInfoInputs.cache
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\WebAPI.Application\obj\Debug\net7.0\WebAPI.Application.AssemblyInfo.cs
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\WebAPI.Application\obj\Debug\net7.0\WebAPI.Application.csproj.CoreCompileInputs.cache
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\WebAPI.Application\obj\Debug\net7.0\WebAPI.Application.csproj.CopyComplete
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\WebAPI.Application\obj\Debug\net7.0\WebAPI.Application.dll
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\WebAPI.Application\obj\Debug\net7.0\refint\WebAPI.Application.dll
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\WebAPI.Application\obj\Debug\net7.0\WebAPI.Application.pdb
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\WebAPI.Application\obj\Debug\net7.0\ref\WebAPI.Application.dll
