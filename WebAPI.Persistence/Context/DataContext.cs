@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +9,8 @@ using WebAPI.Domain.Entities;
 
 namespace WebAPI.Persistence.Context
 {
-    public class DataContext: DbContext
-    {
+    public class DataContext: IdentityDbContext<User, UserRole, int>
+	{
         public DataContext()
         {
 

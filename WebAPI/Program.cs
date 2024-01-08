@@ -12,31 +12,23 @@ using WebAPI.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
 
-
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 
 
+//builder.Services.AddDbContext<DataContext>(options =>
+//							 options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddDbContext<DataContext>(options =>
-							 options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+							 options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
-builder.Services.AddPersistenceSubService(builder.Configuration);
+//builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
 
-builder.Services.AddControllers().AddFluentValidation(s => {
-	s.RegisterValidatorsFromAssemblyContaining<AccountValidation>();
-});
-
-
-
-
-builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
+//builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<User, UserRole>().AddEntityFrameworkStores<DataContext>()  .AddDefaultTokenProviders();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -52,6 +44,18 @@ builder.Services.AddAuthentication(options =>
 		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
 	};
 });
+
+
+
+//builder.Services.AddPersistenceSubService(builder.Configuration);
+
+//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+//builder.Services.AddControllers().AddFluentValidation(s => {
+//	s.RegisterValidatorsFromAssemblyContaining<AccountValidation>();
+//});
+
+
 
 
 var app = builder.Build();
@@ -71,4 +75,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-public partial class Program { }
+//public partial class Program { }

@@ -7,8 +7,7 @@ namespace WebAPI.Domain.Entities
 	//Kullanıcı Yönetimi
 	public class User: IdentityUser<int>,IEntity
 	{
-		
-		public string FirstName { get; set; }                                // Kullanıcı adı.
+        public string FirstName { get; set; }                                // Kullanıcı adı.
 		public string LastName { get; set; }                                 // Kullanıcı adı.
 
         public int RoleId { get; set; }
