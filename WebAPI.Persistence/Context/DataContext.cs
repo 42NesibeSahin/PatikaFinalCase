@@ -34,8 +34,20 @@ namespace WebAPI.Persistence.Context
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+			modelBuilder.Entity<UserRole>().HasData(
+			  new UserRole
+			  {
+				  Id = 1,
+				  Name="admin",
 
-            base.OnModelCreating(modelBuilder);
+			  },
+			  new UserRole
+			  {
+				   Id = 2,
+				   Name = "user",
+
+			  });
+			base.OnModelCreating(modelBuilder);
         }
 
 		

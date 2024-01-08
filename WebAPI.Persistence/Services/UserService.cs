@@ -31,8 +31,7 @@ namespace WebAPI.Persistence.Services
         }
         public async Task<int> CreateUser(CreateUserDto createUserDto, int roleID)
         {
-            // Validation nasıl oluyor, ekleyecek miyiz ?
-
+           
             User user = _mapper.Map<User>(createUserDto);
             user.RoleId = roleID;
             user.PasswordHash = UserHelper.HashPassword(user, createUserDto.Password);

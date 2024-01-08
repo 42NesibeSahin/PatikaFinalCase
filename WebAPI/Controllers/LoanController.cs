@@ -10,21 +10,16 @@ namespace WebAPI.Controllers
 	[Authorize]
 	public class LoanController : ControllerBase
 	{
-		//[HttpPost("applyForLoan")]
-		[HttpPost]
+		[HttpPost("applyForLoan")]
 		public IActionResult ApplyForLoan([FromBody] Loan loan)
 		{
-			// Kredi başvurusu işlemleri
-			// Örneğin: Kullanıcı bilgileri ve mali durum değerlendirmesi, vb.
 			return Ok();
 		}
 
-		//[HttpGet("loanStatus/{loanId}")]
-		[HttpGet]
+		[HttpGet("loanStatus/{loanId}")]
+	
 		public IActionResult LoanStatus(int loanId)
 		{
-			// Kredi durumunu sorgulama işlemleri
-			// Örneğin: Veritabanından ilgili kredi bilgisini sorgulama, vb.
 			return Ok();
 		}
 	}

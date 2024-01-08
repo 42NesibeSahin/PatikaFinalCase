@@ -10,21 +10,15 @@ namespace WebAPI.Controllers
 	[Authorize]
 	public class AutoPaymentController : ControllerBase
 	{
-		//[HttpPost("setupAutoPayment")]
-		[HttpPost]
+		[HttpPost("setupAutoPayment")]
 		public IActionResult SetupAutoPayment([FromBody] AutoPayment autoPayment)
 		{
-			// Otomatik ödeme ayarlama işlemleri
-			// Örneğin: Ödeme planı oluşturma, ödeme durumunu "Active" olarak ayarlama, vb.
 			return Ok();
 		}
 
-		//[HttpDelete("cancelAutoPayment/{autoPaymentId}")]
-		[HttpDelete]
+		[HttpDelete("cancelAutoPayment/{autoPaymentId}")]
 		public IActionResult CancelAutoPayment(int autoPaymentId)
 		{
-			// Otomatik ödeme iptali işlemleri
-			// Örneğin: Veritabanındaki ilgili ödeme planını bulma ve durumunu "Cancelled" olarak güncelleme, vb.
 			return Ok();
 		}
 	}
