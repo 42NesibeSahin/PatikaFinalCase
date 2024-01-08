@@ -49,11 +49,12 @@ builder.Services.AddAuthentication(options =>
 
 //builder.Services.AddPersistenceSubService(builder.Configuration);
 
-//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-//builder.Services.AddControllers().AddFluentValidation(s => {
-//	s.RegisterValidatorsFromAssemblyContaining<AccountValidation>();
-//});
+builder.Services.AddControllers().AddFluentValidation(s =>
+{
+	s.RegisterValidatorsFromAssemblyContaining<AccountValidation>();
+});
 
 
 
