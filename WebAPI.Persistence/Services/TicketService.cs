@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using WebAPI.Application.DTOs;
 using WebAPI.Application.Interfaces.Repositories;
 using WebAPI.Application.Interfaces.Services;
@@ -23,10 +25,15 @@ namespace WebAPI.Persistence.Services
 			_mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 		}
 
-		public async Task<IEnumerable<TicketDto>> GetAll(string sortField = "Priority", string sortOrder = "asc")
+		public async Task<IEnumerable<TicketDto>> GetAll(string sortField = "Priority", string sortOrder = "asc", string Priority = null)
 		{
 			var query = _ticketRepository.AsQueryable();
 
+			// Filtreleme
+			if (!string.IsNullOrEmpty(Priority))
+			{
+				query = query.Where(u => u.Priority.Contains(Priority));
+			}
 			// Sorting
 			if (!string.IsNullOrEmpty(sortField))
 			{
@@ -43,7 +50,9 @@ namespace WebAPI.Persistence.Services
 		{
 			Ticket ticket = _mapper.Map<Ticket>(ekleDto);
 			await _ticketRepository.AddAsync(ticket);
+			await _ticketRepository.Save();
 			return _mapper.Map<TicketDto>(ticket);
+			
 		}
 
 		public async Task<TicketDto> GetByIDAsync(int id)
@@ -73,6 +82,7 @@ namespace WebAPI.Persistence.Services
 
 			_mapper.Map(ekleDto, ticketToUpdate);
 			await _ticketRepository.UpdateAsync(ticketToUpdate);
+			await _ticketRepository.Save();
 		}
 	}
 }

@@ -16,6 +16,8 @@ namespace WebAPI.Application.Common.Mappings
 			CreateMap<Account, AccountDto>().ReverseMap();
 			CreateMap<Account, AccountEkleDto>().ReverseMap();
 			CreateMap<AccountDto, AccountEkleDto>().ReverseMap();
+			CreateMap<Account, AccountEkleDtoPut>().ReverseMap();
+			
 		}
 	}
 }

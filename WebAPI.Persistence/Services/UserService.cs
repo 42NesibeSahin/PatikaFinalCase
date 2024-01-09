@@ -12,137 +12,213 @@ using WebAPI.Application.Interfaces.Repositories;
 using WebAPI.Application.Interfaces.Services;
 using WebAPI.Domain.Entities;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Http;
+using WebAPI.Domain.Common.Claim;
 
 namespace WebAPI.Persistence.Services
 {
-    public class UserService : IUserService
-    {
-        private readonly IUserRepository _userRepository;
-        IMapper _mapper;
-        private readonly UserManager<User> _userManager;
-        private readonly IConfiguration _configuration;
-        public UserService(IUserRepository userRepository, IMapper mapper, UserManager<User> userManager, IConfiguration configuration)
-        {
-            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
-            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+	public class UserService : IUserService
+	{
+		private readonly IUserRepository _userRepository;
+		IMapper _mapper;
+		private readonly UserManager<User> _userManager;
+		private readonly IConfiguration _configuration;
+		private readonly IHttpContextAccessor _httpContextAccessor;
+		public UserService(IUserRepository userRepository, IMapper mapper, UserManager<User> userManager, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+		{
+			_userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+			_mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+			_userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+			_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+			_httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+		}
+		public async Task<RequestResultDto> CreateUser(CreateUserDto createUserDto, string roleName)
+		{
+			RequestResultDto requestResultDto = new RequestResultDto() { result = false };
+			try
+			{
+				User user = _mapper.Map<User>(createUserDto);
 
-        }
-        public async Task<int> CreateUser(CreateUserDto createUserDto, int roleID)
-        {
-           
-            User user = _mapper.Map<User>(createUserDto);
-            user.RoleId = roleID;
-            user.PasswordHash = UserHelper.HashPassword(user, createUserDto.Password);
-            await _userRepository.AddAsync(user);
-            await _userRepository.Save();
-            return user.Id;
-        }
+				var userByUserName = await _userManager.FindByNameAsync(user.UserName);
 
-        public async Task<LoginResultDto> LoginUser(LoginUserDto loginUserDto)
-        {
+				if (userByUserName != null)
+				{
+					requestResultDto.message = "Bu kullanıcı daha önceden eklenmiş";
+					return requestResultDto;
+				}
 
-            LoginResultDto loginResultDto = new LoginResultDto() { result = false };
+				var createResult = await _userManager.CreateAsync(user, createUserDto.Password);
+				if (!createResult.Succeeded)
+				{
+					requestResultDto.message = string.Join(",", createResult.Errors.Select(x => x.Description).ToList());
+					return requestResultDto;
+				}
 
-            var user = await _userManager.FindByNameAsync(loginUserDto.Username);
-            if (user != null)
-            {
-                var result = await _userManager.CheckPasswordAsync(user, loginUserDto.Password);
-                if (result)
-                {
-                    loginResultDto.Token = await GenerateToken(user);
-                    loginResultDto.result = true;
-                }
-            }
-            return loginResultDto;
-        }
+				if (!UserHelper.ExistRoleName(roleName))
+				{
+					requestResultDto.message = "Var olmayan rol eklenemez";
+					return requestResultDto;
+				}
 
-        public async Task<bool> UpdateUserPassword(string password, int userID)
-        {
-            bool result = false;
-            var user = await _userManager.FindByIdAsync(userID.ToString());
-            if (user != null)
-            {
-                user.PasswordHash = UserHelper.HashPassword(user, password);
-                await _userRepository.UpdateAsync(user);
-                await _userRepository.Save();
-                result = true;
-            }
-            return result;
-        }
+				await _userManager.AddToRoleAsync(user, roleName);
+				await _userRepository.Save();
+				requestResultDto.result = true;
+				return requestResultDto;
+			}
+			catch (Exception ex)
+			{
+				await _userRepository.Rollback();
+				requestResultDto.message = "Kullanıcı oluştururken hata oluştu";
+				return requestResultDto;
+			}
+		}
 
-        public async Task<bool> UpdateUserName(JsonPatchDocument<UpdateUserNameDto> updateNameDto, int userID)
-        {
-            bool result = false;
-            var user = await _userManager.FindByIdAsync(userID.ToString());
-            if (user != null)
-            {
-                var userPatch = _mapper.Map<UpdateUserNameDto>(user);
+		public async Task<LoginResultDto> LoginUser(LoginUserDto loginUserDto)
+		{
+			LoginResultDto loginResultDto = new LoginResultDto() { result = false };
 
-                updateNameDto.ApplyTo(userPatch);
+			var user = await _userManager.FindByNameAsync(loginUserDto.Username);
+			if (user != null)
+			{
+				var result = await _userManager.CheckPasswordAsync(user, loginUserDto.Password);
+				if (result)
+				{
+					loginResultDto.Token = await GenerateToken(user);
+					loginResultDto.result = true;
+				}
+				else
+				{
+					loginResultDto.message = "Kullanıcı adı veya şifre doğru değil";
+					return loginResultDto;
+				}
+			}
+			else
+			{
+				loginResultDto.message = "Kullanıcı mevcut değil";
+				return loginResultDto;
+			}
+			return loginResultDto;
+		}
 
-                _mapper.Map(userPatch, user);
+		public async Task<bool> UpdateUserPassword(string password)
+		{
 
-                await _userRepository.Save();
-                result = true;
-            }
-            return result;
-        }
+			bool result = false;
+			var user = await GetUserAsync();
+			if (user != null)
+			{
+				await _userManager.RemovePasswordAsync(user);
+				if (!await _userManager.HasPasswordAsync(user))
+				{
+					await _userManager.AddPasswordAsync(user, password);
+				}
+				await _userRepository.Save();
+				result = true;
+			}
+			return result;
+		}
 
-        public async Task<ResponseUserDto> GetUserInformation(int userID)
-        {
+		public async Task<bool> UpdateUserName(JsonPatchDocument<UpdateUserNameDto> updateNameDto, int userID)
+		{
+			bool result = false;
+			var user = await _userManager.FindByIdAsync(userID.ToString());
+			if (user != null)
+			{
+				var userPatch = _mapper.Map<UpdateUserNameDto>(user);
 
-            var user = await _userManager.FindByIdAsync(userID.ToString());
-            ResponseUserDto responseUserDto = _mapper.Map<ResponseUserDto>(user);
+				updateNameDto.ApplyTo(userPatch);
 
-            return responseUserDto;
-        }
+				_mapper.Map(userPatch, user);
 
-        public async Task<bool> UpdateUserRole(int roleID, int userID)
-        {
-            bool result = false;
-            var user = await _userManager.FindByIdAsync(userID.ToString());
-            if (user != null)
-            {
-                user.RoleId = roleID;
-                await _userRepository.UpdateAsync(user);
-                await _userRepository.Save();
-                result = true;
-            }
-            return result;
-        }
+				await _userRepository.Save();
+				result = true;
+			}
+			return result;
+		}
 
-        private async Task<string> GenerateToken(User user)
-        {
+		public async Task<ResponseUserDto> GetUserInformation(int userID)
+		{
 
-            var roles = await _userManager.GetRolesAsync(user);
-            var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.Name, user.FirstName + user.LastName));
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.UserName));
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
+			var user = await _userManager.FindByIdAsync(userID.ToString());
+			ResponseUserDto responseUserDto = _mapper.Map<ResponseUserDto>(user);
 
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
-            var tokenDesc = new SecurityTokenDescriptor
-            {
-                SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
-                Expires = DateTime.UtcNow.AddHours(2),
-                Subject = new ClaimsIdentity(claims),
-                Issuer = _configuration["JWT:Issuer"],
-                Audience = _configuration["JWT:Audience"]
-            };
+			return responseUserDto;
+		}
 
-            var tokenHandler = new JwtSecurityTokenHandler();
+		public async Task<bool> UpdateUserRole(int roleID, int userID)
+		{
+			bool result = false;
+			var user = await _userManager.FindByIdAsync(userID.ToString());
+			if (user != null)
+			{
+				//user.RoleId = roleID;
+				await _userRepository.UpdateAsync(user);
+				await _userRepository.Save();
+				result = true;
+			}
+			return result;
+		}
 
-            var token = tokenHandler.CreateToken(tokenDesc);
+		public int GetUserId()
+		{
+			var userId = _httpContextAccessor.HttpContext.User.Claims.SingleOrDefault(claim => claim.Type == nameof(UserClaimModel.Id)).Value;
+			if (userId == null)
+			{
+				throw new UnauthorizedAccessException();
+			}
+			return int.Parse(userId);
+		}
+		public async Task<User> GetUserAsync()
+		{
+			var userId = GetUserId();
+			var user = await _userManager.FindByIdAsync(userId.ToString());
+			if (user == null)
+			{ throw new UnauthorizedAccessException(); }
+			return user;
+		}
 
-            return tokenHandler.WriteToken(token);
-        }
+		public async Task<List<string>> GetCurrentUserRolesAsync()
+		{
+			var user = await GetUserAsync();
+			var roles = await _userManager.GetRolesAsync(user);
+			return roles.ToList();
+		}
 
-    }
+		private async Task<string> GenerateToken(User user)
+		{
+
+			var roles = await _userManager.GetRolesAsync(user);
+			var claims = new List<Claim>();
+			claims.Add(new Claim(ClaimTypes.Name, user.UserName));
+			claims.Add(new Claim(ClaimTypes.NameIdentifier, user.UserName));
+			claims.Add(new Claim(nameof(UserClaimModel.Id), user.Id.ToString()));
+
+			foreach (var role in roles)
+			{
+				claims.Add(new Claim(ClaimTypes.Role, role));
+			}
+
+			var userClaims = await _userManager.GetClaimsAsync(user);
+			claims.AddRange(userClaims);
+
+			var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
+			var tokenDesc = new SecurityTokenDescriptor
+			{
+				SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
+				Expires = DateTime.UtcNow.AddHours(12),
+				Subject = new ClaimsIdentity(claims),
+				Issuer = _configuration["JWT:Issuer"],
+				Audience = _configuration["JWT:Audience"]
+			};
+
+			var tokenHandler = new JwtSecurityTokenHandler();
+
+			var token = tokenHandler.CreateToken(tokenDesc);
+
+			return tokenHandler.WriteToken(token);
+		}
+
+	}
 }
 
 

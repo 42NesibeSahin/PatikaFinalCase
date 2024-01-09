@@ -10,9 +10,9 @@ using WebAPI.Application.Interfaces.Services;
 namespace WebAPI.Controllers
 {
 
-	//[ApiController]
-	//[Route("[controller]")]
-	//[Authorize]
+	[ApiController]
+	[Route("[controller]")]
+	[Authorize]
 	public class TransactionController : ControllerBase
 	{
 
@@ -30,12 +30,12 @@ namespace WebAPI.Controllers
 
 		// Para yatırma işlemleri
 		[HttpPost("deposit")]
-		[Authorize(Roles = "Admin, Manager")]
 		public async Task<ActionResult<TransactionDto>> AddDeposit([FromBody] TransactionEkleDto ekleDto)
 		{
 			try
 			{
 				var transactionDto = await _transactionService.AddDeposit(ekleDto);
+				
 				return CreatedAtAction(nameof(GetByID), new { id = transactionDto.ID }, transactionDto);
 			}
 			catch (Exception ex)
@@ -65,7 +65,6 @@ namespace WebAPI.Controllers
 
 		// Para çekme işlemleri
 		[HttpPost("withdraw")]
-		[Authorize(Roles = "Admin, Manager")]
 		public async Task<ActionResult<TransactionDto>> AddWithdraw([FromBody] TransactionEkleDto ekleDto)
 		{
 			try

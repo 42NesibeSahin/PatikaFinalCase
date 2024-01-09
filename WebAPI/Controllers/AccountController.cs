@@ -23,8 +23,8 @@ namespace WebAPI.Controllers
 		}
 
 
-		[AllowAnonymous]                           // yalnız bu istek için yetki kullanılmamması istendiğinde 
-		[Authorize(Roles ="")]                     // yalnız bu istek için seçili yetkili kullanılmamması istendiğinde 
+		//[AllowAnonymous]                           // yalnız bu istek için yetki kullanılmamması istendiğinde 
+		//[Authorize(Roles ="admin")]                     // yalnız bu istek için seçili yetkili kullanılmamması istendiğinde 
 		[HttpPost("createAccount")]
 		public async Task<ActionResult<AccountDto>> Add([FromBody] AccountEkleDto ekleDto)
 		{
@@ -77,7 +77,6 @@ namespace WebAPI.Controllers
 		}
 
 		[HttpPut("updateBalance")]
-		[Authorize(Roles = "Admin, Manager")]
 		public async Task<IActionResult> UpdateBalance(int accountId, [FromBody] AccountEkleDtoPut putChanges)
 		{
 			try

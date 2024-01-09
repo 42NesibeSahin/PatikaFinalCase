@@ -27,6 +27,7 @@ namespace WebAPI.Persistence.Services
 		{
 			var account = _mapper.Map<Account>(ekleDto);
 			await _accountRepository.AddAsync(account);
+			await _accountRepository.Save();
 			return _mapper.Map<AccountDto>(account);
 		}
 
@@ -72,6 +73,8 @@ namespace WebAPI.Persistence.Services
 
 			_mapper.Map(putChanges, account); // Update the account entity with the changes
 			await _accountRepository.UpdateAsync(account);
+
+			await _accountRepository.Save();
 		}
 	}
 }

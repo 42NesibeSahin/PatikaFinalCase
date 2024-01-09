@@ -24,10 +24,12 @@ namespace WebAPI.Persistence.Repositories
         public async Task<T> AddAsync(T entity)
         {
             await _entity.AddAsync(entity);
-            return entity;
+            //Save();
+			return entity;
         }
+	
 
-        public async Task DeleteAsync(int id)
+		public async Task DeleteAsync(int id)
         {
             var entity = await GetByIDAsync(id);
             if (entity != null)
@@ -57,6 +59,7 @@ namespace WebAPI.Persistence.Repositories
         public async Task<T> UpdateAsync(T entity)
         {
             _entity.Update(entity);
+            //Save();
             return entity;
         }
         
@@ -75,5 +78,11 @@ namespace WebAPI.Persistence.Repositories
         {
             _context.ChangeTracker.Entries().ToList().ForEach(async x => await x.ReloadAsync());
         }
-    }
+
+		//public async Task<int> SaveAsync()
+		//{
+		//	return await _context.SaveChangesAsync();
+		//}
+
+	}
 }

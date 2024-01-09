@@ -9,7 +9,7 @@ namespace WebAPI.Application.Interfaces.Services
 {
     public interface ITicketService
     {
-		Task<IEnumerable<TicketDto>> GetAll(string sortField = "Priority", string sortOrder = "asc");
+		Task<IEnumerable<TicketDto>> GetAll(string sortField = "Priority", string sortOrder = "asc",string Priority = null);
 		Task<TicketDto> CreateTicketAsync(TicketEkleDto ekleDto);
 		Task<TicketDto> GetByIDAsync(int id);
 		Task UpdateTicketAsync(int ticketId, TicketEkleDto ekleDto);

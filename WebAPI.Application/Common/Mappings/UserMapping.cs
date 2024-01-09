@@ -13,12 +13,12 @@ namespace WebAPI.Application.Common.Mappings
     {
         public UserMapping()
         {
-            CreateMap<User, CreateUserDto>().ReverseMap();
-            CreateMap<User, UpdateUserNameDto>().ReverseMap();
+            CreateMap<User, CreateUserDto>();
+			CreateMap<CreateUserDto, User>();
+			CreateMap<User, UpdateUserNameDto>().ReverseMap();
             CreateMap<User, ResponseUserDto>().ReverseMap();
-
             
 
-        }
+		}
     }
 }

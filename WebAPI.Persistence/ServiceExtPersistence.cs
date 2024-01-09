@@ -15,8 +15,9 @@ namespace WebAPI.Persistence
 {
     public static class ServiceExtPersistence
     {
-        public static void AddPersistenceSubService(this IServiceCollection service, IConfiguration configuration)
+        public static void AddPersistenceSubService(this IServiceCollection service)
         {
+
             // Repositories
             service.AddScoped<IAccountRepository, AccountRepository>();
             service.AddScoped<IAutoPaymentRepository, AutoPaymentRepository>();

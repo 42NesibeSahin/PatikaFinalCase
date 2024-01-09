@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WebAPI.Application.DTOs;
 using WebAPI.Application.Interfaces.Repositories;
 using WebAPI.Application.Interfaces.Services;
+using WebAPI.Domain.Entities;
 
 namespace WebAPI.Persistence.Services
 {
@@ -21,15 +22,22 @@ namespace WebAPI.Persistence.Services
 
 		public async Task<TransactionDto> AddDeposit(TransactionEkleDto ekleDto)
 		{
-			
-			var transaction = _mapper.Map<WebAPI.Domain.Entities.Transaction>(ekleDto);
-			transaction.Date = DateTime.Now;
+			Transaction transaction = _mapper.Map<Transaction>(ekleDto);
+			transaction.Date = DateTime.UtcNow;
 			transaction.Type = "deposit";
-			//var transaction = _mapper.Map<Transaction>(ekleDto);
-			await _transactionRepository.AddAsync(transaction);
-			return _mapper.Map<TransactionDto>(transaction);
-			
+			try
+			{
+				
+				await _transactionRepository.AddAsync(transaction);
+				await _transactionRepository.Save();
+				return _mapper.Map<TransactionDto>(transaction);
+			}
+			catch (Exception ex)
+			{
+				return _mapper.Map<TransactionDto>(transaction);
+			}
 		}
+			
 
 		public async Task<TransactionDto> GetByID(int id)
 		{
@@ -56,13 +64,12 @@ namespace WebAPI.Persistence.Services
 
 			account.Balance -= ekleDto.Amount;
 			await _accountRepository.UpdateAsync(account);
-			
-			//var withdrawalTransaction = _mapper.Map<Transaction>(ekleDto);
-			var withdrawalTransaction = _mapper.Map<WebAPI.Domain.Entities.Transaction>(ekleDto);
+
+			var withdrawalTransaction = _mapper.Map<Transaction>(ekleDto);
 			withdrawalTransaction.Type = "withdraw";
 			withdrawalTransaction.Date = DateTime.UtcNow;
 			await _transactionRepository.AddAsync(withdrawalTransaction);
-
+			await _transactionRepository.Save();
 			return _mapper.Map<TransactionDto>(withdrawalTransaction);
 		}
 

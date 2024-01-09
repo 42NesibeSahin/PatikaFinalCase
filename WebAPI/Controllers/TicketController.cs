@@ -24,11 +24,11 @@ namespace WebAPI.Controllers
 		}
 
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<TicketDto>>> GetAll([FromQuery] string sortField = "Priority", [FromQuery] string sortOrder = "asc")
+		public async Task<ActionResult<IEnumerable<TicketDto>>> GetAll([FromQuery] string sortField = "Priority", [FromQuery] string sortOrder = "asc", [FromQuery] string Priority = null)
 		{
 			try
 			{
-				var ticketsDto = await _ticketService.GetAll(sortField, sortOrder);
+				var ticketsDto = await _ticketService.GetAll(sortField, sortOrder, Priority);
 				return Ok(ticketsDto);
 			}
 			catch (Exception ex)
@@ -43,7 +43,7 @@ namespace WebAPI.Controllers
 
 
 		[HttpPost("createTicket")]
-		[Authorize(Roles = "Admin, Manager")]
+		
 		public async Task<ActionResult<TicketDto>> CreateTicket([FromBody] TicketEkleDto ekleDto)
 		{
 			try
@@ -79,7 +79,6 @@ namespace WebAPI.Controllers
 			}
 		}
 		[HttpPut("updateTicket/{ticketId}")]
-		[Authorize(Roles = "Admin, Manager")]
 		public async Task<IActionResult> UpdateTicket(int ticketId, [FromBody] TicketEkleDto ekleDto)
 		{
 			try

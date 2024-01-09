@@ -26,5 +26,8 @@ namespace WebAPI.Application.Interfaces.Repositories
         Task<int> Save();
         Task Rollback();
 
-    }
+        //Task<int> SaveAsync();
+
+
+	}
 }

@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "//44O+CqC9TixbhG9bTgIrds9yXV4VadxTbaOoUwOJr9CX7yAzBMAlSpHmlxqIvQzl2/q/wZ1OclWuEUdUSJGw==",
+  "dgSpecHash": "hDf8vshm6g9dCKdiF4qNIO9DJ8kWYMWuV6mrWL5C7GkfnC0JuoAqfMC+jqMHbsgFPNPe8iOGrNJXVBR53x5nEg==",
   "success": true,
   "projectFilePath": "C:\\Users\\Nesibe ŞAHİN\\Source\\Repos\\42NesibeSahin\\PatikaFinalCase\\WebAPI.Application\\WebAPI.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
+    "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\7.0.14\\microsoft.aspnetcore.cryptography.internal.7.0.14.nupkg.sha512",
     "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\7.0.14\\microsoft.aspnetcore.cryptography.keyderivation.7.0.14.nupkg.sha512",
     "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\7.0.14\\microsoft.aspnetcore.jsonpatch.7.0.14.nupkg.sha512",

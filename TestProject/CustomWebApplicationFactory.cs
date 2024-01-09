@@ -29,7 +29,7 @@ namespace TestProject
 
 				db.Database.EnsureCreated();
 
-				db.User.Add(new User { FirstName = $"ad_1", LastName = $"soyad_1", RoleId = 1});
+				db.User.Add(new User { FirstName = $"ad_1", LastName = $"soyad_1"/*, RoleId = 1*/});
 
 				db.SaveChanges();
 

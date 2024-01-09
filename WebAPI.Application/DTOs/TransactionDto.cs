@@ -20,8 +20,8 @@ namespace WebAPI.Application.DTOs
 	{
 		public decimal Amount { get; set; }                                   // İşlem miktarı.
 		public int AccountID { get; set; }                                       // İşlemi yapan kullanıcı ID'si.
-		public string Type { get; set; }                                      // İşlem türü  "deposit" veya "withdraw"
-		public DateTime Date { get; set; }
+		//public string Type { get; set; }                                      // İşlem türü  "deposit" veya "withdraw"
+		//public DateTime Date { get; set; }
 
 	}
 }

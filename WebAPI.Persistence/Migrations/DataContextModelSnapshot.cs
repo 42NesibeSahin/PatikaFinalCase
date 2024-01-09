@@ -405,9 +405,6 @@ namespace WebAPI.Persistence.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -427,8 +424,6 @@ namespace WebAPI.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.HasIndex("RoleId");
-
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
@@ -445,7 +440,6 @@ namespace WebAPI.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
@@ -460,18 +454,6 @@ namespace WebAPI.Persistence.Migrations
                         .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "user"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -591,17 +573,6 @@ namespace WebAPI.Persistence.Migrations
                     b.Navigation("Account");
                 });
 
-            modelBuilder.Entity("WebAPI.Domain.Entities.User", b =>
-                {
-                    b.HasOne("WebAPI.Domain.Entities.UserRole", "UserRole")
-                        .WithMany("User")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserRole");
-                });
-
             modelBuilder.Entity("WebAPI.Domain.Entities.Account", b =>
                 {
                     b.Navigation("AutoPayment");
@@ -618,11 +589,6 @@ namespace WebAPI.Persistence.Migrations
                     b.Navigation("Account");
 
                     b.Navigation("Ticket");
-                });
-
-            modelBuilder.Entity("WebAPI.Domain.Entities.UserRole", b =>
-                {
-                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
