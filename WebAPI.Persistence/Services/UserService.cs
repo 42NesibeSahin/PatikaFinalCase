@@ -32,7 +32,7 @@ namespace WebAPI.Persistence.Services
 			_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 			_httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
 		}
-		public async Task<RequestResultDto> CreateUser(CreateUserDto createUserDto, string roleName)
+		public async Task<RequestResultDto> CreateUserWithToken(CreateUserDto createUserDto, string roleName)
 		{
 			RequestResultDto requestResultDto = new RequestResultDto() { result = false };
 			try
@@ -100,11 +100,11 @@ namespace WebAPI.Persistence.Services
 			return loginResultDto;
 		}
 
-		public async Task<bool> UpdateUserPassword(string password)
+		public async Task<bool> UpdateCurrentUserPassword(string password)
 		{
 
 			bool result = false;
-			var user = await GetUserAsync();
+			var user = await GetCurrentUserAsync();
 			if (user != null)
 			{
 				await _userManager.RemovePasswordAsync(user);
@@ -118,48 +118,64 @@ namespace WebAPI.Persistence.Services
 			return result;
 		}
 
-		public async Task<bool> UpdateUserName(JsonPatchDocument<UpdateUserNameDto> updateNameDto, int userID)
+		public async Task<bool> UpdatCurrentUserName(JsonPatchDocument<UpdateUserNameDto> updateNameDto)
 		{
 			bool result = false;
-			var user = await _userManager.FindByIdAsync(userID.ToString());
+			var user = await GetCurrentUserAsync();
 			if (user != null)
 			{
 				var userPatch = _mapper.Map<UpdateUserNameDto>(user);
-
 				updateNameDto.ApplyTo(userPatch);
-
 				_mapper.Map(userPatch, user);
 
-				await _userRepository.Save();
+				await _userManager.UpdateAsync(user);
 				result = true;
 			}
 			return result;
 		}
 
-		public async Task<ResponseUserDto> GetUserInformation(int userID)
+		public async Task<ResponseUserDto> GetCurrentUserInformation()
 		{
-
-			var user = await _userManager.FindByIdAsync(userID.ToString());
+			var user = await GetCurrentUserAsync();
 			ResponseUserDto responseUserDto = _mapper.Map<ResponseUserDto>(user);
 
 			return responseUserDto;
 		}
 
-		public async Task<bool> UpdateUserRole(int roleID, int userID)
+		public async Task<RequestResultDto> UpdateUserRole(string roleName, int userID)
 		{
-			bool result = false;
+			RequestResultDto requestResultDto = new RequestResultDto() { result = false };
+
+			if (!UserHelper.ExistRoleName(roleName))
+			{
+				requestResultDto.message = "Değiştirilmek istenen rol kayıtlı değil";
+				return requestResultDto;
+			}
+
 			var user = await _userManager.FindByIdAsync(userID.ToString());
 			if (user != null)
 			{
-				//user.RoleId = roleID;
-				await _userRepository.UpdateAsync(user);
-				await _userRepository.Save();
-				result = true;
+				var currentRoles = await _userManager.GetRolesAsync(user);
+				await _userManager.RemoveFromRolesAsync(user, currentRoles);
+				var result = await _userManager.AddToRoleAsync(user, roleName);
+
+				if (!result.Succeeded)
+				{
+					requestResultDto.message = "Gönderilen kullanıcının rolü değiştirilemedi";
+					return requestResultDto;
+				}
+
+				requestResultDto.result = true;
 			}
-			return result;
+			else
+			{
+				requestResultDto.message = "Gönderilen kullanıcı bulunamadı";
+				return requestResultDto;
+			}
+			return requestResultDto;
 		}
 
-		public int GetUserId()
+		public int GetCurrentUserId()
 		{
 			var userId = _httpContextAccessor.HttpContext.User.Claims.SingleOrDefault(claim => claim.Type == nameof(UserClaimModel.Id)).Value;
 			if (userId == null)
@@ -168,9 +184,9 @@ namespace WebAPI.Persistence.Services
 			}
 			return int.Parse(userId);
 		}
-		public async Task<User> GetUserAsync()
+		public async Task<User> GetCurrentUserAsync()
 		{
-			var userId = GetUserId();
+			var userId = GetCurrentUserId();
 			var user = await _userManager.FindByIdAsync(userId.ToString());
 			if (user == null)
 			{ throw new UnauthorizedAccessException(); }
@@ -179,7 +195,7 @@ namespace WebAPI.Persistence.Services
 
 		public async Task<List<string>> GetCurrentUserRolesAsync()
 		{
-			var user = await GetUserAsync();
+			var user = await GetCurrentUserAsync();
 			var roles = await _userManager.GetRolesAsync(user);
 			return roles.ToList();
 		}

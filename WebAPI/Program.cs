@@ -19,7 +19,11 @@ using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddFluentValidation(s =>
+{
+	s.RegisterValidatorsFromAssemblyContaining<AccountValidation>();
+});
+;
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -125,12 +129,6 @@ builder.Services.AddApplicationSubService();
 
 //builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddControllers().AddFluentValidation(s =>
-{
-	s.RegisterValidatorsFromAssemblyContaining<AccountValidation>();
-});
-
-
 
 
 var app = builder.Build();
@@ -158,4 +156,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-//public partial class Program { }
+public partial class Program { }

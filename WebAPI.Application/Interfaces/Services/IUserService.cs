@@ -11,15 +11,15 @@ namespace WebAPI.Application.Interfaces.Services
 {
 	public interface IUserService
 	{
-		Task<RequestResultDto> CreateUser(CreateUserDto createUserDto, string roleNam);
+		Task<RequestResultDto> CreateUserWithToken(CreateUserDto createUserDto, string roleNam);
 		Task<LoginResultDto> LoginUser(LoginUserDto loginUserDto);
-		Task<bool> UpdateUserPassword(string password);
-		Task<bool> UpdateUserName(JsonPatchDocument<UpdateUserNameDto> updateNameDto, int userID);
-		Task<bool> UpdateUserRole(int roleID, int userID);
+		Task<bool> UpdateCurrentUserPassword(string password);
+		Task<bool> UpdatCurrentUserName(JsonPatchDocument<UpdateUserNameDto> updateNameDto);
+		Task<RequestResultDto> UpdateUserRole(string roleName, int userID);
 
-		Task<ResponseUserDto> GetUserInformation(int userID);
-		int GetUserId();
-		Task<User> GetUserAsync();
+		Task<ResponseUserDto> GetCurrentUserInformation();
+		int GetCurrentUserId();
+		Task<User> GetCurrentUserAsync();
 		Task<List<string>> GetCurrentUserRolesAsync();
 	}
 }

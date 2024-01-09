@@ -1,23 +1,25 @@
 ﻿
 using FluentValidation;
 using Microsoft.EntityFrameworkCore.Metadata;
+using WebAPI.Application.DTOs;
 using WebAPI.Domain.Entities;
 
 namespace WebAPI.Validations
 {
-    public class AccountValidation :AbstractValidator<Account>
+    public class AccountValidation :AbstractValidator<AccountEkleDto>
 	{
 		public AccountValidation()
 		{
 
 			RuleFor(account => account.Balance)
 		   .GreaterThanOrEqualTo(0)
-		   .WithMessage("The balance cannot be negative.");
+		   .WithMessage("Hesap bakiyesi negatif olamaz");
+
+
 
 			RuleFor(account => account.MinimumBalance)
-				.GreaterThanOrEqualTo(100)
-				.WithMessage("Minimum balance cannot be negative and is a required field.");
-
+				.GreaterThanOrEqualTo(0).WithMessage("Minimum bakiye negatif olamaz")
+				.NotNull().WithMessage("Doldurulması zorunlu bir alandır");
 
 		}
 	}

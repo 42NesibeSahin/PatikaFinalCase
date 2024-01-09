@@ -37,7 +37,7 @@ namespace WebAPI.Controllers
 		[HttpPost("createUser/{roleName}")]
 		public async Task<IActionResult> RegisterUser([FromBody] CreateUserDto model, [FromRoute] string roleName)
 		{
-			RequestResultDto requestResultDto = await _userService.CreateUser(model, roleName);
+			RequestResultDto requestResultDto = await _userService.CreateUserWithToken(model, roleName);
 			if (!requestResultDto.result)
 			{
 				return BadRequest(requestResultDto.message);
@@ -69,15 +69,15 @@ namespace WebAPI.Controllers
 		}
 
 		[Authorize]
-		[HttpPut("updatePassword")]
+		[HttpPut("updateOwnPassword")]
 		public async Task<IActionResult> UpdatePassword([FromBody] string model)
 		{
 			try
 			{
-				bool result = await _userService.UpdateUserPassword(model);
+				bool result = await _userService.UpdateCurrentUserPassword(model);
 				if (result)
 				{
-					return NoContent();
+					return Ok();
 				}
 				else
 				{
@@ -91,15 +91,15 @@ namespace WebAPI.Controllers
 		}
 
 		[Authorize]
-		[HttpPatch("updateName/{userID}")]
-		public async Task<IActionResult> UpdateName([FromBody] JsonPatchDocument<UpdateUserNameDto> model, [FromRoute] int userID)
+		[HttpPatch("updateOwnName")]
+		public async Task<IActionResult> UpdateName([FromBody] JsonPatchDocument<UpdateUserNameDto> model)
 		{
 			try
 			{
-				bool result = await _userService.UpdateUserName(model, userID);
+				bool result = await _userService.UpdatCurrentUserName(model);
 				if (result)
 				{
-					return NoContent();
+					return Ok();
 				}
 				else
 				{
@@ -114,12 +114,12 @@ namespace WebAPI.Controllers
 
 
 		[Authorize]
-		[HttpGet("getUser/{userID}")]
-		public async Task<IActionResult> GetUserData(int userID)
+		[HttpGet("getOwnUserData")]
+		public async Task<IActionResult> GetUserData()
 		{
 			try
 			{
-				ResponseUserDto result = await _userService.GetUserInformation(userID);
+				ResponseUserDto result = await _userService.GetCurrentUserInformation();
 				if (result != null)
 				{
 					return Ok(result);
@@ -136,19 +136,19 @@ namespace WebAPI.Controllers
 		}
 
 		[Authorize(Roles = nameof(UserRoleEnum.admin))]
-		[HttpPut("changeRole/{userID}")]
-		public async Task<IActionResult> ChangeRole([FromBody] int roleID, int userID)
+		[HttpPut("changeUserRole/{userID}")]
+		public async Task<IActionResult> ChangeRole([FromBody] string roleName, int userID)
 		{
 			try
 			{
-				bool result = await _userService.UpdateUserRole(roleID, userID);
-				if (result)
+				RequestResultDto requestResultDto = await _userService.UpdateUserRole(roleName, userID);
+				if (requestResultDto.result)
 				{
-					return NoContent();
+					return Ok();
 				}
 				else
 				{
-					return BadRequest("Kullanıcı rolü güncellenemedi");
+					return BadRequest(requestResultDto.message);
 				}
 			}
 			catch

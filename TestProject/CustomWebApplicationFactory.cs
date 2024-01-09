@@ -35,7 +35,7 @@ namespace TestProject
 
 				for (int i = 0; i < 10; i++)
 				{
-					db.Account.Add(new Account { Balance = 10000, UserID = 1, AccountNumber = $"000 0000 0000 0000"+i, MinimumBalance = 100 });
+					db.Account.Add(new Account { Balance = 1000, UserID = 1, AccountNumber = $"000 0000 0000 0000"+i, MinimumBalance = 100 });
 				}
 
 				db.SaveChanges();

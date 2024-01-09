@@ -23,13 +23,18 @@ namespace WebAPI.Persistence.Services
 			_mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
 		}
 
+
 		public async Task<AccountDto> CreateAccountAsync(AccountEkleDto ekleDto)
 		{
 			var account = _mapper.Map<Account>(ekleDto);
+			account.AccountNumber = await GenerateUniqueAccountNumberAsync();
+
 			await _accountRepository.AddAsync(account);
 			await _accountRepository.Save();
+
 			return _mapper.Map<AccountDto>(account);
 		}
+
 
 		public async Task<AccountDto> GetByIDAsync(int id)
 		{
@@ -42,6 +47,7 @@ namespace WebAPI.Persistence.Services
 			return _mapper.Map<AccountDto>(account);
 		}
 
+
 		public async Task<AccountDto> ViewBalance(string accountNumber)
 		{
 			var account = await _accountRepository.GetWhereQuery(x => x.AccountNumber == accountNumber).FirstOrDefaultAsync();
@@ -52,6 +58,7 @@ namespace WebAPI.Persistence.Services
 			}
 			return _mapper.Map<AccountDto>(account);
 		}
+
 
 		public async Task UpdateBalanceAsync(int accountId, AccountEkleDtoPut putChanges)
 		{
@@ -76,6 +83,33 @@ namespace WebAPI.Persistence.Services
 
 			await _accountRepository.Save();
 		}
+
+
+		private async Task<string> GenerateUniqueAccountNumberAsync()
+		{
+			var random = new Random();
+			string accountNumber;
+
+			do
+			{
+				var accountNumberBuilder = new StringBuilder();
+				for (int i = 0; i < 16; i++)
+				{
+					if (i > 0 && i % 4 == 0)
+						accountNumberBuilder.Append(" ");  // Her 4 hane sonrası boşluk ekle
+
+					accountNumberBuilder.Append(random.Next(0, 10)); // 0 ile 9 arasında rastgele sayılar ekler
+				}
+
+				accountNumber = accountNumberBuilder.ToString();
+
+				// Bu hesap numarası ile eşleşen herhangi bir kayıt var mı kontrol et
+			}
+			while (await _accountRepository.GetWhereQuery(a => a.AccountNumber == accountNumber).AnyAsync());
+
+			return accountNumber;
+		}
+
 	}
 }
 

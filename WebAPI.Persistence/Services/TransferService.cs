@@ -20,11 +20,11 @@ namespace WebAPI.Persistence.Services
 		/// <summary>
 		///  Kullanıcının günlük maksimum gönderebileceği transflerin toplam limitini belirtir
 		/// </summary>
-		const decimal DailyTransferTotalLimit = 2000;
+		const decimal DailyTransferTotalLimit = 2500;
 		/// <summary>
 		///  Kullanıcının günlük maksimum yapabileceği transflerin toplam işlem limitini belirtir
 		/// </summary>
-		const int DailyTransferCountlLimit = 20;
+		const int DailyTransferCountlLimit = 3;
 
 
 
@@ -99,15 +99,18 @@ namespace WebAPI.Persistence.Services
 					{
 						throw new KeyNotFoundException("Hesap bulunamadı");
 					}
+					if (!transferCountControls(ekleDto.AccountID))
+					{
+						throw new InvalidOperationException("Günlük işlem limiti aşımı");
+					}
 
 					if (ekleDto.Amount > senderAccount.Balance)
 					{
 						throw new InvalidOperationException("Yetersiz bakiye");
 					}
-
-					if (ekleDto.Amount > senderAccount.Balance)
+					if (!transferLimitControls(ekleDto.AccountID,ekleDto.Amount))
 					{
-						throw new InvalidOperationException("Günlük işlem limiti aşımı");
+						throw new InvalidOperationException("Günlük maksimum transfer miktar aşımı");
 					}
 
 					senderAccount.Balance -= ekleDto.Amount;
@@ -135,11 +138,27 @@ namespace WebAPI.Persistence.Services
 			}
 		}
 
-		public bool transferLimitControls(int dailyTransferCount, int perTransactionCount)
+	
+		public bool transferLimitControls(int accoundId, decimal newAmount)
 		{
+			var limitToplam = _transferRepository.GetWhereQuery(x =>x.TransferDate.Date == DateTime.UtcNow.Date.ToUniversalTime() &&  x.AccountID == accoundId).Sum(x => x.Amount);
+			limitToplam = limitToplam + newAmount;
+			if (limitToplam > DailyTransferTotalLimit)
+				return false;
+			else
+				return true;
+		}
 
+		public bool transferCountControls(int accoundId)
+		{
+			//var countLimit = _transferRepository.GetWhereQuery(x => x.TransferDate.Date == DateTime.Now.Date && x.AccountID == accoundId).Count();
+			var countLimit = _transferRepository.GetWhereQuery(x =>x.TransferDate.Date == DateTime.UtcNow.Date.ToUniversalTime() &&
+						x.AccountID == accoundId).Count();
 
-			return true;
+			if (countLimit >= DailyTransferCountlLimit)
+				return false;
+			else
+				return true;
 		}
 
 	}

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "hDf8vshm6g9dCKdiF4qNIO9DJ8kWYMWuV6mrWL5C7GkfnC0JuoAqfMC+jqMHbsgFPNPe8iOGrNJXVBR53x5nEg==",
+  "dgSpecHash": "E1psx/cguLKz18/Ei87hoU/EldhWZiQuQ+u145aMpGUYx+pt9Fo9ynXvxeSO0quR+yEFb6oqD8SnAB0niEonOA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Nesibe ŞAHİN\\Source\\Repos\\42NesibeSahin\\PatikaFinalCase\\WebAPI.Application\\WebAPI.Application.csproj",
   "expectedPackageFiles": [
@@ -10,7 +10,11 @@
     "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\7.0.14\\microsoft.aspnetcore.cryptography.keyderivation.7.0.14.nupkg.sha512",
     "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\7.0.14\\microsoft.aspnetcore.jsonpatch.7.0.14.nupkg.sha512",
     "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
+    "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\microsoft.entityframeworkcore\\7.0.14\\microsoft.entityframeworkcore.7.0.14.nupkg.sha512",
+    "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\7.0.14\\microsoft.entityframeworkcore.abstractions.7.0.14.nupkg.sha512",
+    "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\7.0.14\\microsoft.entityframeworkcore.analyzers.7.0.14.nupkg.sha512",
     "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\7.0.0\\microsoft.extensions.caching.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\microsoft.extensions.caching.memory\\7.0.0\\microsoft.extensions.caching.memory.7.0.0.nupkg.sha512",
     "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0\\microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0\\microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
     "C:\\Users\\Nesibe ŞAHİN\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",

@@ -17,7 +17,7 @@ namespace WebAPI.Application.DTOs
 	public class AccountEkleDto
 	{
 		public decimal Balance { get; set; }                             
-		public string AccountNumber { get; set; }                         
+		//public string AccountNumber { get; set; }                         
 		public decimal MinimumBalance { get; set; }                       
 		public string UserID { get; set; }
 	}
@@ -25,6 +25,6 @@ namespace WebAPI.Application.DTOs
 	public class AccountEkleDtoPut
 	{
 		public decimal Balance { get; set; }                              
-		public string AccountNumber { get; set; } 
+		//public string AccountNumber { get; set; } 
 	}
 }
