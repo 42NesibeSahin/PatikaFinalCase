@@ -504,3 +504,5 @@ C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\TestProject\o
 C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\TestProject\obj\Debug\net7.0\TestProject.pdb
 C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\TestProject\obj\Debug\net7.0\TestProject.genruntimeconfig.cache
 C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\TestProject\obj\Debug\net7.0\ref\TestProject.dll
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\TestProject\bin\Debug\net7.0\Castle.Core.dll
+C:\Users\Nesibe ŞAHİN\Source\Repos\42NesibeSahin\PatikaFinalCase\TestProject\bin\Debug\net7.0\Moq.dll

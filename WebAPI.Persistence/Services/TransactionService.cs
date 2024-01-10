@@ -28,6 +28,7 @@ namespace WebAPI.Persistence.Services
 
 		public async Task<TransactionDto> AddDeposit(TransactionEkleDto ekleDto)
 		{
+			TransactionDto transactionDto = new TransactionDto();
 			var strategy = _accountRepository.CreateExecutionStrategy();
 			await strategy.ExecuteAsync(async () =>
 			{
@@ -55,15 +56,16 @@ namespace WebAPI.Persistence.Services
 
 					await _accountRepository.TransactionCommitAsync(transaction);
 
-					return _mapper.Map<TransactionDto>(withdrawalTransaction);
+					transactionDto = _mapper.Map<TransactionDto>(withdrawalTransaction);
 				};
 
 			});
-			return new TransactionDto();
+			return transactionDto;
 		}
 
 		public async Task<TransactionDto> AddWithdraw(TransactionEkleDto ekleDto)
 		{
+			TransactionDto transactionDto = new TransactionDto();
 			var strategy = _accountRepository.CreateExecutionStrategy();
 			await strategy.ExecuteAsync(async () =>
 			{
@@ -97,12 +99,12 @@ namespace WebAPI.Persistence.Services
 
 					await _accountRepository.TransactionCommitAsync(transaction);
 
-					return _mapper.Map<TransactionDto>(withdrawalTransaction);
+					transactionDto = _mapper.Map<TransactionDto>(withdrawalTransaction);
 				};
 
 			});
 
-			return new TransactionDto();
+			return transactionDto;
 		}
 
 		public async Task<TransactionDto> GetByID(int id)

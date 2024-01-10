@@ -11,7 +11,7 @@ namespace WebAPI.Application.Interfaces.Services
 {
 	public interface IUserService
 	{
-		Task<RequestResultDto> CreateUserWithToken(CreateUserDto createUserDto, string roleNam);
+		Task<RequestResultDto> CreateUser(CreateUserDto createUserDto, string roleNam);
 		Task<LoginResultDto> LoginUser(LoginUserDto loginUserDto);
 		Task<bool> UpdateCurrentUserPassword(string password);
 		Task<bool> UpdatCurrentUserName(JsonPatchDocument<UpdateUserNameDto> updateNameDto);

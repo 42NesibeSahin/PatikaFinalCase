@@ -72,6 +72,7 @@ namespace WebAPI.Persistence.Repositories
 
 		public async Task<int> Save()
 		{
+			
 			return await _context.SaveChangesAsync();
 		}
 
@@ -92,7 +93,16 @@ namespace WebAPI.Persistence.Repositories
 
 		public async Task<T?> GetByIdLockedAsync(int id)
 		{
-			return await _entity.FromSqlRaw($"SELECT * FROM {typeof(T).Name}s WHERE Id = {{0}} FOR UPDATE", id).FirstOrDefaultAsync();
+			//return await _entity.FromSqlRaw($"SELECT * FROM {typeof(T).Name.ToLower()} WHERE Id = {{0}} FOR UPDATE", id).FirstOrDefaultAsync();
+
+			//return await _entity.FromSqlRaw($"SELECT * FROM {typeof(T).Name} WHERE Id = {{0}} FOR UPDATE", id).FirstOrDefaultAsync();
+			
+				return await _entity
+					.Where(e => e.Id == id)
+					.TagWith("FOR UPDATE")  
+					.FirstOrDefaultAsync();
+			
+
 		}
 
 		public async Task TransactionCommitAsync(IDbContextTransaction transaction)

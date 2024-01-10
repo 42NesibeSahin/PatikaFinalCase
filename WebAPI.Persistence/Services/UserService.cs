@@ -32,7 +32,7 @@ namespace WebAPI.Persistence.Services
 			_configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
 			_httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
 		}
-		public async Task<RequestResultDto> CreateUserWithToken(CreateUserDto createUserDto, string roleName)
+		public async Task<RequestResultDto> CreateUser(CreateUserDto createUserDto, string roleName)
 		{
 			RequestResultDto requestResultDto = new RequestResultDto() { result = false };
 			try

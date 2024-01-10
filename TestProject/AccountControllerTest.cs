@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using System.Runtime.InteropServices;
 using Xunit;
 using WebAPI.Application.DTOs;
+using System.Net.Http.Json;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace TestProject
 {
@@ -23,13 +26,26 @@ namespace TestProject
 
 			var client = _factory.CreateClient();
 
-			var responseApi = await client.GetAsync("api/account/1");
+			LoginUserDto loginUserDto = new LoginUserDto()
+			{
+				Username = "admin_test",
+				Password = "T123_t"
+			};
+			var content = JsonContent.Create(loginUserDto);
 
+			var response = await client.PostAsync("api/user/login", content);
+			response.EnsureSuccessStatusCode(); 
+			var responseString = await response.Content.ReadAsStringAsync();
+			var loginToken = JsonConvert.DeserializeObject<string>(responseString);
+
+
+
+			client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginToken);
+			var responseApi = await client.GetAsync("api/account/1");
 			responseApi.EnsureSuccessStatusCode();
 
-			var accountContent = await responseApi.Content.ReadAsStringAsync();
-
-			var accountDto = System.Text.Json.JsonSerializer.Deserialize<AccountDto>(accountContent);
+			var responseStringApi = await response.Content.ReadAsStringAsync();
+			var accountDto = JsonConvert.DeserializeObject<AccountDto>(responseString);
 
 			Assert.NotNull(accountDto);
 

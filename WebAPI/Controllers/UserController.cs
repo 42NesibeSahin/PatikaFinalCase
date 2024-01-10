@@ -37,7 +37,7 @@ namespace WebAPI.Controllers
 		[HttpPost("createUser/{roleName}")]
 		public async Task<IActionResult> RegisterUser([FromBody] CreateUserDto model, [FromRoute] string roleName)
 		{
-			RequestResultDto requestResultDto = await _userService.CreateUserWithToken(model, roleName);
+			RequestResultDto requestResultDto = await _userService.CreateUser(model, roleName);
 			if (!requestResultDto.result)
 			{
 				return BadRequest(requestResultDto.message);

@@ -11,7 +11,7 @@ namespace WebAPI.Controllers
 {
     [ApiController]
 	[Route("api/account")]
-	//[Authorize]
+	[Authorize]
 	public class AccountController : ControllerBase
 	{
 

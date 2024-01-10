@@ -14,8 +14,8 @@ namespace WebAPI.Domain.Entities
 		public DateTime Date { get; set; }                                    // İşlem tarihi. 
 		public int AccountID { get; set; }                                    // İşlemi yapan kullanıcı ID'si.
 
-		[Timestamp]
-		public byte[] RowVersion { get; set; }
+		//[Timestamp]
+		//public byte[] RowVersion { get; set; }
 
 		[ForeignKey("AccountID")]
 		public Account Account { get; set; }
